@@ -1,0 +1,41 @@
+apiVersion: v1
+kind: Secret
+metadata:
+  labels:
+    argocd.argoproj.io/secret-type: repository
+  name: kro
+  namespace: argocd
+stringData:
+  url: ghcr.io/kro-run/kro
+  name: kro
+  type: helm
+  enableOCI: "true"
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kro
+  labels:
+    app: kro
+    app.kubernetes.io/managed-by: argocd
+    app.kubernetes.io/name: kro
+  namespace: argocd
+  finalizers:
+  - resources-finalizer.argocd.argoproj.io
+spec:
+  project: wings
+  destination:
+    namespace: kro
+    server: https://kubernetes.default.svc
+  source:
+    repoURL: ghcr.io/kro-run/kro
+    chart: kro
+    targetRevision: 0.2.3
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+    - CreateNamespace=true
+    - ApplyOutOfSyncOnly=true
+    

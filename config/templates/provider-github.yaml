@@ -1,0 +1,49 @@
+apiVersion: github.upbound.io/v1beta1
+kind: ProviderConfig
+metadata:
+  name: provider-github-config
+  annotations:
+    helm.sh/hook-weight: "1"
+spec:
+  credentials:
+    source: Secret
+    secretRef:
+      namespace: crossplane-system
+      name: provider-github-config
+      key: token
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: provider-github-config
+  namespace: crossplane-system
+spec:
+  refreshInterval: 1m
+  secretStoreRef:
+    name: scaleway
+    kind: ClusterSecretStore
+  target:
+    name: provider-github-config
+    creationPolicy: Owner
+  data:
+    - secretKey: token
+      remoteRef:
+        key: name:github-token-sync
+---
+apiVersion: external-secrets.io/v1beta1
+kind: ExternalSecret
+metadata:
+  name: github-token-write
+  namespace: crossplane-system
+spec:
+  refreshInterval: 1m
+  secretStoreRef:
+    name: scaleway
+    kind: ClusterSecretStore
+  target:
+    name: github-token-write
+    creationPolicy: Owner
+  data:
+    - secretKey: token
+      remoteRef:
+        key: name:github-token-write

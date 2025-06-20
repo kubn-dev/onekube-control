@@ -1,0 +1,6 @@
+apiVersion: v2
+name: control-provider
+description: OneKube Control Provider Helm Chart for Crossplane providers
+type: application
+version: 0.1.0
+appVersion: "0.1.0"

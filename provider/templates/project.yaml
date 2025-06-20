@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: wings
+  namespace: argocd
+spec:
+  clusterResourceWhitelist:
+    - group: '*'
+      kind: '*'
+  description: OneKube Wings project
+  destinations:
+    - namespace: argocd
+      server: https://kubernetes.default.svc
+    - namespace: crossplane-system
+      server: https://kubernetes.default.svc
+    - namespace: kro
+      server: https://kubernetes.default.svc
+    - namespace: wing-*
+      server: https://kubernetes.default.svc
+  sourceNamespaces:
+    - argocd
+  sourceRepos:
+    - '*'
